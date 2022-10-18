@@ -26,6 +26,7 @@ const LoginContainer = styled.div`
 	height: 100vh;
 	padding: 70px 0;
 	background-color: #ffffff;
+	margin: 0 auto;
 	img {
 		width: 180px;
 		height: 180px;
@@ -33,13 +34,17 @@ const LoginContainer = styled.div`
 	form {
 		display: flex;
 		flex-direction: column;
+		align-items: center;
+		width: 303px;
 		input {
+			width: 95%;
 			margin-bottom: 7px;
 		}
 		button {
+			width: 100%;
 			height: 35px;
-			font-size: 20px;
 			margin-bottom: 25px;
+			font-size: 20px;
 		}
 	}
 `;

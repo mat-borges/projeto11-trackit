@@ -35,10 +35,14 @@ const RegisterContainer = styled.div`
 	form {
 		display: flex;
 		flex-direction: column;
+		align-items: center;
+		width: 303px;
 		input {
+			width: 95%;
 			margin-bottom: 7px;
 		}
 		button {
+			width: 100%;
 			height: 35px;
 			font-size: 20px;
 			margin-bottom: 25px;

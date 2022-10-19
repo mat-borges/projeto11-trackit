@@ -1,16 +1,22 @@
+import UserContext from './UserContext.js';
 import { baseColor } from '../constants/colors.js';
 import styled from 'styled-components';
+import { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function Header() {
 	const location = useLocation();
+	const { userInfo } = useContext(UserContext);
+	console.log(userInfo);
+
 	if (location.pathname !== '/' && location.pathname !== '/cadastro') {
 		return (
 			<HeaderContainer>
 				<h1>TrackIt</h1>
 				<img
-					src="https://img.elo7.com.br/product/original/3254FDB/bob-esponja-e-patrick-em-camadas-arquivo-de-corte-personalizados-bob-esponja-e-patrick.jpg"
-					alt="logo"
+					src={userInfo.image}
+					alt={userInfo.name}
+					title={`${userInfo.name}\n${userInfo.email}`}
 				/>
 			</HeaderContainer>
 		);

@@ -1,13 +1,38 @@
-import { accentColor, baseColor, textColor } from '../../constants/colors';
+import { baseColor, textColor } from '../../constants/colors';
 
 import checkIcon from '../../assets/images/checkmark.svg';
+import dayjs from 'dayjs';
 import styled from 'styled-components';
 
 export default function TodayPage() {
+	dayjs.locale('br');
+	const dayOfWeek = () => {
+		switch (dayjs().day()) {
+			case 0:
+				return 'Domingo';
+			case 1:
+				return 'Segunda';
+			case 2:
+				return 'Terça';
+			case 3:
+				return 'Quarta';
+			case 4:
+				return 'Quinta';
+			case 5:
+				return 'Sexta';
+			case 6:
+				return 'Sábado';
+			default:
+				return null;
+		}
+	};
+
 	return (
 		<TodayContainer>
 			<TodayHeader>
-				<h1>Terça, 18/10</h1>
+				<h1>
+					{dayOfWeek()}, {dayjs().format('DD/MM')}
+				</h1>
 				<h2>Nenhum hábito concluído ainda</h2>
 			</TodayHeader>
 			<DayHabits>

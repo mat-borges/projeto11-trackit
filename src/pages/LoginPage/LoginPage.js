@@ -1,16 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
 
 import { BASE_URL } from '../../constants/urls.js';
 import { ThreeDots } from 'react-loader-spinner';
+import UserContext from '../../components/UserContext.js';
 import axios from 'axios';
 import logo from '../../assets/images/logo.png';
 import styled from 'styled-components';
-import { useState } from 'react';
 
 export default function LoginPage() {
 	const navigate = useNavigate();
 	const [logginIn, setLoggingIn] = useState(false);
 	const [user, setUser] = useState({ email: '', password: '' });
+	const { setUserInfo } = useContext(UserContext);
 
 	function logIn(e) {
 		e.preventDefault();
@@ -19,6 +21,7 @@ export default function LoginPage() {
 			.post(`${BASE_URL}/auth/login`, user)
 			.then((res) => {
 				console.log(res.data);
+				setUserInfo(res.data);
 				navigate('/hoje');
 			})
 			.catch((err) => {

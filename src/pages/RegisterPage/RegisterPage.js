@@ -22,8 +22,8 @@ export default function RegisterPage() {
 				navigate('/');
 			})
 			.catch((err) => {
-				alert(err.response.data.details);
 				console.log(err.response.data);
+				alert(err.response.data.message);
 				setRegistering(false);
 			});
 	}

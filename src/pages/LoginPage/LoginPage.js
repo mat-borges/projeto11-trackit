@@ -1,15 +1,82 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { BASE_URL } from '../../constants/urls.js';
+import { ThreeDots } from 'react-loader-spinner';
+import axios from 'axios';
 import logo from '../../assets/images/logo.png';
 import styled from 'styled-components';
+import { useState } from 'react';
 
 export default function LoginPage() {
+	const navigate = useNavigate();
+	const [logginIn, setLoggingIn] = useState(false);
+	const [user, setUser] = useState({ email: '', password: '' });
+
+	function logIn(e) {
+		e.preventDefault();
+		setLoggingIn(true);
+		axios
+			.post(`${BASE_URL}/auth/login`, user)
+			.then((res) => {
+				console.log(res.data);
+				navigate('/hoje');
+			})
+			.catch((err) => {
+				console.log(err.response.data);
+				alert(`${err.response.data.details}`);
+				setLoggingIn(false);
+			});
+	}
+
+	function email(value) {
+		const newUser = { ...user };
+		newUser.email = value;
+		setUser(newUser);
+	}
+	function password(value) {
+		const newUser = { ...user };
+		newUser.password = value;
+		setUser(newUser);
+	}
+
+	console.log(user);
+
 	return (
-		<LoginContainer>
+		<LoginContainer color={logginIn === true ? '#f2f2f2' : '#ffffff'}>
 			<img src={logo} alt="logo" />
-			<form>
-				<input type="email" placeholder="email" />
-				<input type="password" placeholder="senha" />
-				<button type="submit">Entrar</button>
+			<form onSubmit={logIn}>
+				<input
+					type="email"
+					placeholder="email"
+					required
+					disabled={logginIn === true ? 'disabled' : ''}
+					value={user.email}
+					onChange={(e) => email(e.target.value)}
+				/>
+				<input
+					type="password"
+					placeholder="senha"
+					required
+					disabled={logginIn === true ? 'disabled' : ''}
+					value={user.password}
+					onChange={(e) => password(e.target.value)}
+				/>
+				<button type="submit" disabled={logginIn === true ? 'disabled' : ''}>
+					{logginIn === true ? (
+						<ThreeDots
+							height="80"
+							width="80"
+							radius="9"
+							color="#ffffff"
+							ariaLabel="three-dots-loading"
+							wrapperStyle={{}}
+							wrapperClassName=""
+							visible={true}
+						/>
+					) : (
+						'Entrar'
+					)}
+				</button>
 			</form>
 			<Link to="/cadastro">
 				<p>Não tem uma conta? Cadastre-se!</p>
@@ -37,10 +104,14 @@ const LoginContainer = styled.div`
 		align-items: center;
 		width: 303px;
 		input {
+			background-color: ${(props) => props.color};
 			width: 95%;
 			margin-bottom: 7px;
 		}
 		button {
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			width: 100%;
 			height: 35px;
 			margin-bottom: 25px;

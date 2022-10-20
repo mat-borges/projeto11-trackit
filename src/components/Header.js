@@ -25,6 +25,7 @@ export default function Header() {
 
 const HeaderContainer = styled.div`
 	display: flex;
+	z-index: 3;
 	position: fixed;
 	top: 0;
 	left: 0;

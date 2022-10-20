@@ -43,6 +43,7 @@ export default function Menu() {
 
 const MenuContainer = styled.div`
 	display: flex;
+	z-index: 3;
 	position: fixed;
 	bottom: 0;
 	left: 0;

@@ -65,20 +65,7 @@ export default function LoginPage() {
 					onChange={(e) => password(e.target.value)}
 				/>
 				<button type="submit" disabled={logginIn === true ? 'disabled' : ''}>
-					{logginIn === true ? (
-						<ThreeDots
-							height="80"
-							width="80"
-							radius="9"
-							color="#ffffff"
-							ariaLabel="three-dots-loading"
-							wrapperStyle={{}}
-							wrapperClassName=""
-							visible={true}
-						/>
-					) : (
-						'Entrar'
-					)}
+					{logginIn === true ? <ThreeDots color="#ffffff" /> : 'Entrar'}
 				</button>
 			</form>
 			<Link to="/cadastro">

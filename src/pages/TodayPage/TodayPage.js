@@ -1,27 +1,50 @@
 import { baseColor, textColor } from '../../constants/colors';
+import { useContext, useEffect, useState } from 'react';
 
+import { BASE_URL } from '../../constants/urls';
+import Loading from '../../components/Loading';
+import UserContext from '../../components/UserContext';
+import axios from 'axios';
 import checkIcon from '../../assets/images/checkmark.svg';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 
 export default function TodayPage() {
+	const { userInfo } = useContext(UserContext);
+	const [todayHabits, setTodayHabits] = useState([]);
+
+	useEffect(() => {
+		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+		axios
+			.get(`${BASE_URL}/habits/today`, config)
+			.then((res) => {
+				console.log(res.data);
+				setTodayHabits(res.data);
+			})
+			.catch((err) => console.log(err.response.data));
+	}, [userInfo]);
+
+	if (todayHabits.length === 0) {
+		return <Loading />;
+	}
+
 	dayjs.locale('br');
 	const dayOfWeek = () => {
 		switch (dayjs().day()) {
 			case 0:
-				return 'Domingo';
+				return { d: '0', name: 'Domingo' };
 			case 1:
-				return 'Segunda';
+				return { d: '1', name: 'Segunda' };
 			case 2:
-				return 'Terça';
+				return { d: '2', name: 'Terça' };
 			case 3:
-				return 'Quarta';
+				return { d: '3', name: 'Quarta' };
 			case 4:
-				return 'Quinta';
+				return { d: '4', name: 'Quinta' };
 			case 5:
-				return 'Sexta';
+				return { d: '5', name: 'Sexta' };
 			case 6:
-				return 'Sábado';
+				return { d: '6', name: 'Sábado' };
 			default:
 				return null;
 		}
@@ -31,20 +54,24 @@ export default function TodayPage() {
 		<TodayContainer>
 			<TodayHeader>
 				<h1>
-					{dayOfWeek()}, {dayjs().format('DD/MM')}
+					{dayOfWeek().name}, {dayjs().format('DD/MM')}
 				</h1>
 				<h2>Nenhum hábito concluído ainda</h2>
 			</TodayHeader>
-			<DayHabits>
-				<div>
-					<h1>Ler 1 capítulo de livro</h1>
-					<p>Sequência atual: 3 dias</p>
-					<p>Seu recorde: 5 dias</p>
-				</div>
-				<button>
-					<img src={checkIcon} alt="check icon" title="concluir hábito" />
-				</button>
-			</DayHabits>
+			{todayHabits.map((e) => {
+				return (
+					<DayHabits key={e.id} color={e.done === true ? '#8FC549' : '#e7e7e7'}>
+						<div>
+							<h1>{e.name}</h1>
+							<p>Sequência atual: {e.currentSequence} dias</p>
+							<p>Seu recorde: {e.highestSequence} dias</p>
+						</div>
+						<button>
+							<img src={checkIcon} alt="check icon" title="concluir hábito" />
+						</button>
+					</DayHabits>
+				);
+			})}
 		</TodayContainer>
 	);
 }
@@ -97,7 +124,7 @@ const DayHabits = styled.div`
 		}
 	}
 	button {
-		background-color: #e7e7e7;
+		background-color: ${(props) => props.color};
 		img {
 			width: 69px;
 			height: 69px;

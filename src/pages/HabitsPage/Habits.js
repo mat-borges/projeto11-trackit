@@ -9,6 +9,7 @@ import { useContext } from 'react';
 
 export default function Habits({ habit }) {
 	const { userInfo } = useContext(UserContext);
+
 	function deleteHabit(id) {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
 		if (window.confirm('Tem certeza que deseja deletar esse hábito?')) {
@@ -18,6 +19,7 @@ export default function Habits({ habit }) {
 				.catch((err) => console.log(err.response.data));
 		}
 	}
+
 	return (
 		<Habit>
 			<h3>{habit.name}</h3>

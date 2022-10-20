@@ -20,6 +20,7 @@ export default function HabitsPage() {
 		axios
 			.get(`${BASE_URL}/habits`, config)
 			.then((res) => {
+				console.log(res.data);
 				setHabitsList(res.data);
 			})
 			.catch((err) => console.log(err.response.data));

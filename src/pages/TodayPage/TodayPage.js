@@ -1,8 +1,9 @@
 import { baseColor, textColor } from '../../constants/colors';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import { BASE_URL } from '../../constants/urls';
 import Loading from '../../components/Loading';
+import ProgressContext from '../../components/ProgressContext';
 import UserContext from '../../components/UserContext';
 import axios from 'axios';
 import checkIcon from '../../assets/images/checkmark.svg';
@@ -11,14 +12,29 @@ import styled from 'styled-components';
 
 export default function TodayPage() {
 	const { userInfo } = useContext(UserContext);
+	const { setProgress, progress } = useContext(ProgressContext);
 	const [todayHabits, setTodayHabits] = useState([]);
+	const percentage = useRef(0);
+
+	console.log(percentage);
 
 	useEffect(() => {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+
+		function progressUpdate() {
+			let newProgress = { ...progress };
+			newProgress = { ...newProgress, total: todayHabits.length };
+			const dones = todayHabits.filter((e) => e.done === true);
+			newProgress = { ...newProgress, done: dones.length };
+			setProgress(newProgress);
+		}
+
 		axios
 			.get(`${BASE_URL}/habits/today`, config)
 			.then((res) => {
 				setTodayHabits(res.data);
+				percentage.current = (progress.done / progress.total) * 100;
+				progressUpdate();
 			})
 			.catch((err) => console.log(err.response.data));
 	}, [userInfo]);
@@ -49,24 +65,48 @@ export default function TodayPage() {
 		}
 	};
 
+	function checkHabit({ id, done }) {
+		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+		if (done === false) {
+			axios
+				.post(`${BASE_URL}/habits/${id}/check`, [], config)
+				.then(() => console.log('sucesso'))
+				.catch((err) => console.log(err.response.data));
+		} else {
+			axios
+				.post(`${BASE_URL}/habits/${id}/uncheck`, [], config)
+				.then(() => console.log('sucesso'))
+				.catch((err) => console.log(err.response.data));
+		}
+	}
+
 	return (
 		<TodayContainer>
 			<TodayHeader>
 				<h1>
 					{dayOfWeek().name}, {dayjs().format('DD/MM')}
 				</h1>
-				<h2>Nenhum hábito concluído ainda</h2>
+				{!percentage ? (
+					<h2>Nenhum hábito concluído ainda</h2>
+				) : (
+					<h3>percentage% dos hábitos concluídos</h3>
+				)}
 			</TodayHeader>
 			{todayHabits.map((e) => {
 				return (
-					<DayHabits key={e.id} color={e.done === true ? '#8FC549' : '#e7e7e7'}>
+					<DayHabits key={e.id} done={e.done}>
 						<div>
 							<h1>{e.name}</h1>
 							<p>Sequência atual: {e.currentSequence} dias</p>
 							<p>Seu recorde: {e.highestSequence} dias</p>
 						</div>
 						<button>
-							<img src={checkIcon} alt="check icon" title="concluir hábito" />
+							<img
+								src={checkIcon}
+								alt="check icon"
+								title="concluir hábito"
+								onClick={() => checkHabit(e)}
+							/>
 						</button>
 					</DayHabits>
 				);
@@ -93,6 +133,11 @@ const TodayHeader = styled.div`
 	}
 	h2 {
 		color: #bababa;
+		font-size: 18px;
+		line-height: 23px;
+	}
+	h3 {
+		color: #8fc549;
 		font-size: 18px;
 		line-height: 23px;
 	}
@@ -124,7 +169,7 @@ const DayHabits = styled.div`
 		}
 	}
 	button {
-		background-color: ${(props) => props.color};
+		background-color: ${(props) => (props.done ? '#8FC549' : '#e7e7e7')};
 		img {
 			width: 69px;
 			height: 69px;

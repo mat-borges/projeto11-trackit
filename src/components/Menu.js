@@ -1,12 +1,17 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import ProgressContext from './ProgressContext';
 import { accentColor } from '../constants/colors';
 import styled from 'styled-components';
+import { useContext } from 'react';
 
 export default function Menu() {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const { progress } = useContext(ProgressContext);
+
+	const percentage = (progress.done / progress.total) * 100;
 
 	if (location.pathname !== '/' && location.pathname !== '/cadastro') {
 		return (
@@ -16,7 +21,7 @@ export default function Menu() {
 				</h1>
 				<div onClick={() => navigate('/hoje')}>
 					<CircularProgressbarWithChildren
-						value={75}
+						value={percentage}
 						background="true"
 						backgroundPadding={5}
 						styles={{

@@ -44,7 +44,6 @@ export default function NewHabit({ addingHabit, newHabit, setAddingHabit, setNew
 		setNewHabit({ ...newHabit, name });
 	}
 	function cancelNewHabit() {
-		setNewHabit({ name: '', days: [] });
 		setAddingHabit(false);
 	}
 

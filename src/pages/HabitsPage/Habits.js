@@ -1,9 +1,23 @@
+import { BASE_URL } from '../../constants/urls.js';
+import UserContext from '../../components/UserContext.js';
 import { WEEKDAYS } from '../../constants/weekdays.js';
+import axios from 'axios';
 import deleteIcon from '../../assets/images/delete.svg';
 import styled from 'styled-components';
 import { textColor } from '../../constants/colors';
+import { useContext } from 'react';
 
 export default function Habits({ habit }) {
+	const { userInfo } = useContext(UserContext);
+	function deleteHabit(id) {
+		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+		if (window.confirm('Tem certeza que deseja deletar esse hábito?')) {
+			axios
+				.delete(`${BASE_URL}/habits/${id}`, config)
+				.then(() => alert('Hábito removido com sucesso!'))
+				.catch((err) => console.log(err.response.data));
+		}
+	}
 	return (
 		<Habit>
 			<h3>{habit.name}</h3>
@@ -11,7 +25,7 @@ export default function Habits({ habit }) {
 				src={deleteIcon}
 				alt="deletar habito"
 				title="Deletar hábito"
-				onClick={() => alert(`apagar: '${habit.name}'`)}
+				onClick={() => deleteHabit(habit.id)}
 			/>
 			<div>
 				{WEEKDAYS.map((day, i) => (

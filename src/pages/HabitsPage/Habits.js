@@ -1,39 +1,43 @@
+import { WEEKDAYS } from '../../constants/weekdays.js';
 import deleteIcon from '../../assets/images/delete.svg';
 import styled from 'styled-components';
 import { textColor } from '../../constants/colors';
-import weekdays from '../../constants/weekdays';
 
 export default function Habits({ habit }) {
 	return (
 		<Habit>
 			<h3>{habit.name}</h3>
-			<img src={deleteIcon} alt="deletar habito" title="Deletar hábito" />
+			<img
+				src={deleteIcon}
+				alt="deletar habito"
+				title="Deletar hábito"
+				onClick={() => alert(`apagar: '${habit.name}'`)}
+			/>
 			<div>
-				{weekdays.map((day, i) => (
-					<Weekdays
+				{WEEKDAYS.map((day, i) => (
+					<WeekdaysContainer
 						key={i}
 						title={day.day}
-						color={habit.days.includes(day.number) ? '#d5d5d5' : '#ffffff'}
-						backcolor={habit.days.includes(day.number) ? '#ffffff' : '#dbdbdb'}
+						selected={habit.days.includes(Number(day.number))}
 						cursor="default"
 						disabled>
 						{day.abbr}
-					</Weekdays>
+					</WeekdaysContainer>
 				))}
 			</div>
 		</Habit>
 	);
 }
 
-const Weekdays = styled.button`
+const WeekdaysContainer = styled.button`
 	width: 30px;
 	height: 30px;
 	margin: 8px 4px 0 0;
 	padding: 0;
-	border: 1px solid #d5d5d5;
-	color: ${(props) => props.color};
+	border: 1px solid #cfcfcf;
+	color: ${(props) => (props.selected ? '#ffffff' : '#dbdbdb')};
 	font-size: 20px;
-	background-color: ${(props) => props.backcolor};
+	background-color: ${(props) => (props.selected ? '#cfcfcf' : '#ffffff')};
 	cursor: ${(props) => (props.cursor === 'default' ? 'default' : 'pointer')};
 `;
 

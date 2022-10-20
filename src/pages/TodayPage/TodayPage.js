@@ -18,7 +18,6 @@ export default function TodayPage() {
 		axios
 			.get(`${BASE_URL}/habits/today`, config)
 			.then((res) => {
-				console.log(res.data);
 				setTodayHabits(res.data);
 			})
 			.catch((err) => console.log(err.response.data));
@@ -100,23 +99,24 @@ const TodayHeader = styled.div`
 `;
 
 const DayHabits = styled.div`
-	box-sizing: border-box;
-	min-height: 94px;
-	height: fit-content;
-	background-color: #ffffff;
-	border-radius: 5px;
 	display: flex;
 	justify-content: space-between;
+	box-sizing: border-box;
+	height: fit-content;
+	min-height: 94px;
+	margin-top: 10px;
 	padding: 15px;
+	border-radius: 5px;
+	background-color: #ffffff;
 	div {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		color: ${textColor};
 		h1 {
+			margin-bottom: 7px;
 			font-size: 20px;
 			line-height: 25px;
-			margin-bottom: 7px;
 		}
 		h2 {
 			font-size: 13px;

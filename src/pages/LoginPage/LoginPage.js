@@ -20,7 +20,6 @@ export default function LoginPage() {
 		axios
 			.post(`${BASE_URL}/auth/login`, user)
 			.then((res) => {
-				console.log(res.data);
 				setUserInfo(res.data);
 				navigate('/hoje');
 			})
@@ -41,8 +40,6 @@ export default function LoginPage() {
 		newUser.password = value;
 		setUser(newUser);
 	}
-
-	console.log(user);
 
 	return (
 		<LoginContainer color={logginIn === true ? '#f2f2f2' : '#ffffff'}>

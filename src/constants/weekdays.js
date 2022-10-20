@@ -1,4 +1,4 @@
-const weekdays = [
+export const WEEKDAYS = [
 	{ day: 'Domingo', abbr: 'D', number: '0' },
 	{ day: 'Segunda-Feira', abbr: 'S', number: '1' },
 	{ day: 'Terça-Feira', abbr: 'T', number: '2' },
@@ -7,5 +7,3 @@ const weekdays = [
 	{ day: 'Sexta-Feira', abbr: 'S', number: '5' },
 	{ day: 'Sábado', abbr: 'S', number: '6' },
 ];
-
-export default weekdays;

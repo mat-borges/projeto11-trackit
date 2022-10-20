@@ -3,10 +3,10 @@ import { useContext, useState } from 'react';
 import { BASE_URL } from '../../constants/urls';
 import { ThreeDots } from 'react-loader-spinner';
 import UserContext from '../../components/UserContext';
+import { WEEKDAYS } from '../../constants/weekdays.js';
 import { accentColor } from '../../constants/colors';
 import axios from 'axios';
 import styled from 'styled-components';
-import weekdays from '../../constants/weekdays';
 
 export default function NewHabit({ addingHabit, newHabit, setAddingHabit, setNewHabit }) {
 	const [sendingNewHabit, setSendingNewHabit] = useState(false);
@@ -56,15 +56,14 @@ export default function NewHabit({ addingHabit, newHabit, setAddingHabit, setNew
 				onChange={(e) => handleName(e.target.value)}
 			/>
 			<div>
-				{weekdays.map((e, i) => (
+				{WEEKDAYS.map((day, i) => (
 					<Weekdays
 						key={i}
 						type="button"
-						title={e.day}
-						backcolor={newHabit.days.includes(e.number) ? '#d5d5d5' : '#ffffff'}
-						color={newHabit.days.includes(e.number) ? '#ffffff' : '#dbdbdb'}
-						onClick={() => handleDays(e.number)}>
-						{e.abbr}
+						title={day.day}
+						selected={newHabit.days.includes(day.number)}
+						onClick={() => handleDays(day.number)}>
+						{day.abbr}
 					</Weekdays>
 				))}
 			</div>
@@ -100,10 +99,10 @@ const Weekdays = styled.button`
 	height: 30px;
 	margin: 8px 4px 0 0;
 	padding: 0;
-	border: 1px solid #d5d5d5;
-	color: ${(props) => props.color};
+	border: 1px solid #cfcfcf;
+	color: ${(props) => (props.selected ? '#ffffff' : '#dbdbdb')};
 	font-size: 20px;
-	background-color: ${(props) => props.backcolor};
+	background-color: ${(props) => (props.selected ? '#cfcfcf' : '#ffffff')};
 	cursor: ${(props) => (props.cursor === 'default' ? 'default' : 'pointer')};
 `;
 

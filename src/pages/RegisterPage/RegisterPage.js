@@ -18,7 +18,6 @@ export default function RegisterPage() {
 		axios
 			.post(`${BASE_URL}/auth/sign-up`, user)
 			.then((res) => {
-				console.log(res.data);
 				navigate('/');
 			})
 			.catch((err) => {
@@ -48,7 +47,6 @@ export default function RegisterPage() {
 		newUser.image = value;
 		setUser(newUser);
 	}
-	console.log(user);
 
 	return (
 		<RegisterContainer color={registering === true ? '#f2f2f2' : '#ffffff'}>

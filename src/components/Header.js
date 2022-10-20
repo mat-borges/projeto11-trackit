@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 export default function Header() {
 	const location = useLocation();
 	const { userInfo } = useContext(UserContext);
-	console.log(userInfo);
 
 	if (location.pathname !== '/' && location.pathname !== '/cadastro') {
 		return (

@@ -8,9 +8,11 @@ import NewHabit from './NewHabit';
 import UserContext from '../../components/UserContext';
 import axios from 'axios';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 export default function HabitsPage() {
 	const { userInfo } = useContext(UserContext);
+	const navigate = useNavigate();
 	const [habitsList, setHabitsList] = useState([]);
 	const [addingHabit, setAddingHabit] = useState(false);
 	const [newHabit, setNewHabit] = useState({ name: '', days: [] });
@@ -18,14 +20,22 @@ export default function HabitsPage() {
 
 	useEffect(() => {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-		axios
-			.get(`${BASE_URL}/habits`, config)
-			.then((res) => {
-				console.log(res.data);
-				setHabitsList(res.data);
-			})
-			.catch((err) => console.log(err.response.data));
-	}, [userInfo, render]);
+		if (localStorage.token !== undefined) {
+			userInfo.userName = localStorage.name;
+			userInfo.email = localStorage.email;
+			userInfo.token = localStorage.token;
+			userInfo.image = localStorage.image;
+			axios
+				.get(`${BASE_URL}/habits`, config)
+				.then((res) => {
+					console.log(res.data);
+					setHabitsList(res.data);
+				})
+				.catch((err) => console.log(err.response.data));
+		} else {
+			navigate('/');
+		}
+	}, [render]);
 
 	if (habitsList.length === 0) {
 		return <Loading />;

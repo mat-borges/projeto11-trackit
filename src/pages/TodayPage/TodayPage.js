@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import { BASE_URL } from '../../constants/urls';
 import Loading from '../../components/Loading';
+import { Navigate } from 'react-router-dom';
 import ProgressContext from '../../components/ProgressContext';
 import UserContext from '../../components/UserContext';
 import axios from 'axios';
@@ -19,23 +20,31 @@ export default function TodayPage() {
 	useEffect(() => {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
 
-		function progressUpdate(res) {
-			let newProgress = { total: res.length };
-			const dones = res.filter((e) => e.done === true);
-			newProgress = { ...newProgress, done: dones.length };
-			setProgress(newProgress);
-		}
+		if (localStorage.token !== undefined) {
+			userInfo.userName = localStorage.name;
+			userInfo.email = localStorage.email;
+			userInfo.token = localStorage.token;
+			userInfo.image = localStorage.image;
+			function progressUpdate(res) {
+				let newProgress = { total: res.length };
+				const dones = res.filter((e) => e.done === true);
+				newProgress = { ...newProgress, done: dones.length };
+				setProgress(newProgress);
+			}
 
-		axios
-			.get(`${BASE_URL}/habits/today`, config)
-			.then((res) => {
-				setTodayHabits(res.data);
-				progressUpdate(res.data);
-				console.log('progress.done---', progress.done, '---progress.total---', progress.total);
-				setPercentage((progress.done / progress.total) * 100);
-			})
-			.catch((err) => console.log(err.response.data));
-	}, [userInfo, render]);
+			axios
+				.get(`${BASE_URL}/habits/today`, config)
+				.then((res) => {
+					setTodayHabits(res.data);
+					progressUpdate(res.data);
+					console.log('progress.done---', progress.done, '---progress.total---', progress.total);
+					setPercentage((progress.done / progress.total) * 100);
+				})
+				.catch((err) => console.log(err.response.data));
+		} else {
+			Navigate('/');
+		}
+	}, [render]);
 
 	if (todayHabits.length === 0) {
 		return <Loading />;

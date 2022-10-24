@@ -21,9 +21,11 @@ export default function LoginPage() {
 			.post(`${BASE_URL}/auth/login`, user)
 			.then((res) => {
 				setUserInfo(res.data);
-				navigate('/hoje');
 				localStorage.setItem('token', res.data.token);
 				localStorage.setItem('image', res.data.image);
+				localStorage.setItem('name', res.data.name);
+				localStorage.setItem('email', res.data.email);
+				navigate('/hoje');
 			})
 			.catch((err) => {
 				console.log(err.response.data);

@@ -1,8 +1,25 @@
 import { baseColor, textColor } from '../../constants/colors';
+import { useContext, useEffect } from 'react';
 
+import UserContext from '../../components/UserContext';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 export default function HistoryPage() {
+	const { userInfo } = useContext(UserContext);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (localStorage.token !== undefined) {
+			userInfo.userName = localStorage.name;
+			userInfo.email = localStorage.email;
+			userInfo.token = localStorage.token;
+			userInfo.image = localStorage.image;
+		} else {
+			navigate('/');
+		}
+	}, []);
+
 	return (
 		<HistoryContainer>
 			<HistoryHeader>

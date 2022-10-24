@@ -12,12 +12,7 @@ export default function Header() {
 		return (
 			<HeaderContainer>
 				<h1>TrackIt</h1>
-				<img
-					src={userInfo.image}
-					alt={userInfo.name}
-					title={`${userInfo.name}\n${userInfo.email}`}
-					data-identifier="avatar"
-				/>
+				<img src={userInfo.image} alt={userInfo.name} data-identifier="avatar" />
 			</HeaderContainer>
 		);
 	}

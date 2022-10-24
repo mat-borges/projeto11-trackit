@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { textColor } from '../../constants/colors';
 import { useContext } from 'react';
 
-export default function Habits({ habit }) {
+export default function Habits({ habit, render, setRender }) {
 	const { userInfo } = useContext(UserContext);
 
 	function deleteHabit(id) {
@@ -15,19 +15,23 @@ export default function Habits({ habit }) {
 		if (window.confirm('Tem certeza que deseja deletar esse hábito?')) {
 			axios
 				.delete(`${BASE_URL}/habits/${id}`, config)
-				.then(() => alert('Hábito removido com sucesso!'))
+				.then(() => {
+					alert('Hábito removido com sucesso!');
+					setRender(!render);
+				})
 				.catch((err) => console.log(err.response.data));
 		}
 	}
 
 	return (
 		<Habit>
-			<h3>{habit.name}</h3>
+			<h3 data-identifier="habit-name">{habit.name}</h3>
 			<img
 				src={deleteIcon}
 				alt="deletar habito"
 				title="Deletar hábito"
 				onClick={() => deleteHabit(habit.id)}
+				data-identifier="delete-habit-btn"
 			/>
 			<div>
 				{WEEKDAYS.map((day, i) => (

@@ -1,22 +1,26 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
 
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import ProgressContext from './ProgressContext';
 import { accentColor } from '../constants/colors';
 import styled from 'styled-components';
-import { useContext } from 'react';
 
 export default function Menu() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { progress } = useContext(ProgressContext);
+	const { percentage, setPercentage, progress } = useContext(ProgressContext);
 
-	const percentage = (progress.done / progress.total) * 100;
+	console.log('percentage', percentage);
+
+	useEffect(() => {
+		setPercentage((progress.done / progress.total) * 100);
+	}, [progress]);
 
 	if (location.pathname !== '/' && location.pathname !== '/cadastro') {
 		return (
 			<MenuContainer>
-				<h1>
+				<h1 data-identifier="habit-page-action">
 					<Link to="/habitos">Hábitos</Link>
 				</h1>
 				<div onClick={() => navigate('/hoje')}>
@@ -38,7 +42,7 @@ export default function Menu() {
 						<p>Hoje</p>
 					</CircularProgressbarWithChildren>
 				</div>
-				<h1>
+				<h1 data-identifier="historic-page-action">
 					<Link to="/historico">Histórico</Link>
 				</h1>
 			</MenuContainer>

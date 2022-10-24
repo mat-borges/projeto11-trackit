@@ -1,5 +1,5 @@
 import { baseColor, textColor } from '../../constants/colors';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { BASE_URL } from '../../constants/urls';
 import Loading from '../../components/Loading';
@@ -12,19 +12,16 @@ import styled from 'styled-components';
 
 export default function TodayPage() {
 	const { userInfo } = useContext(UserContext);
-	const { setProgress, progress } = useContext(ProgressContext);
+	const { setProgress, progress, percentage, setPercentage } = useContext(ProgressContext);
 	const [todayHabits, setTodayHabits] = useState([]);
-	const percentage = useRef(0);
-
-	console.log(percentage);
+	const [render, setRender] = useState(false);
 
 	useEffect(() => {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
 
-		function progressUpdate() {
-			let newProgress = { ...progress };
-			newProgress = { ...newProgress, total: todayHabits.length };
-			const dones = todayHabits.filter((e) => e.done === true);
+		function progressUpdate(res) {
+			let newProgress = { total: res.length };
+			const dones = res.filter((e) => e.done === true);
 			newProgress = { ...newProgress, done: dones.length };
 			setProgress(newProgress);
 		}
@@ -33,11 +30,12 @@ export default function TodayPage() {
 			.get(`${BASE_URL}/habits/today`, config)
 			.then((res) => {
 				setTodayHabits(res.data);
-				percentage.current = (progress.done / progress.total) * 100;
-				progressUpdate();
+				progressUpdate(res.data);
+				console.log('progress.done---', progress.done, '---progress.total---', progress.total);
+				setPercentage((progress.done / progress.total) * 100);
 			})
 			.catch((err) => console.log(err.response.data));
-	}, [userInfo]);
+	}, [userInfo, render]);
 
 	if (todayHabits.length === 0) {
 		return <Loading />;
@@ -70,27 +68,31 @@ export default function TodayPage() {
 		if (done === false) {
 			axios
 				.post(`${BASE_URL}/habits/${id}/check`, [], config)
-				.then(() => console.log('sucesso'))
+				.then(() => setRender(!render))
 				.catch((err) => console.log(err.response.data));
 		} else {
 			axios
 				.post(`${BASE_URL}/habits/${id}/uncheck`, [], config)
-				.then(() => console.log('sucesso'))
+				.then(() => setRender(!render))
 				.catch((err) => console.log(err.response.data));
+		}
+	}
+
+	function text() {
+		if (!percentage) {
+			return <h2>Nenhum hábito concluído ainda</h2>;
+		} else {
+			return <h3>{percentage}% dos hábitos concluídos</h3>;
 		}
 	}
 
 	return (
 		<TodayContainer>
-			<TodayHeader>
+			<TodayHeader data-identifier="today-infos">
 				<h1>
 					{dayOfWeek().name}, {dayjs().format('DD/MM')}
 				</h1>
-				{!percentage ? (
-					<h2>Nenhum hábito concluído ainda</h2>
-				) : (
-					<h3>percentage% dos hábitos concluídos</h3>
-				)}
+				{text()}
 			</TodayHeader>
 			{todayHabits.map((e) => {
 				return (
@@ -106,6 +108,7 @@ export default function TodayPage() {
 								alt="check icon"
 								title="concluir hábito"
 								onClick={() => checkHabit(e)}
+								data-identifier="done-habit-btn"
 							/>
 						</button>
 					</DayHabits>

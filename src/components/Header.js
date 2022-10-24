@@ -16,6 +16,7 @@ export default function Header() {
 					src={userInfo.image}
 					alt={userInfo.name}
 					title={`${userInfo.name}\n${userInfo.email}`}
+					data-identifier="avatar"
 				/>
 			</HeaderContainer>
 		);

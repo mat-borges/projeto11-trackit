@@ -58,6 +58,7 @@ export default function RegisterPage() {
 					required
 					value={user.email}
 					onChange={(e) => email(e.target.value)}
+					data-identifier="input-email"
 				/>
 				<input
 					type="password"
@@ -65,12 +66,14 @@ export default function RegisterPage() {
 					required
 					value={user.password}
 					onChange={(e) => password(e.target.value)}
+					data-identifier="input-password"
 				/>
 				<input
 					placeholder="nome"
 					required
 					value={user.name}
 					onChange={(e) => nome(e.target.value)}
+					data-identifier="input-name"
 				/>
 				<input
 					type="url"
@@ -78,6 +81,7 @@ export default function RegisterPage() {
 					required
 					value={user.image}
 					onChange={(e) => image(e.target.value)}
+					data-identifier="input-photo"
 				/>
 				<button type="submit">
 					{registering === true ? (
@@ -97,7 +101,7 @@ export default function RegisterPage() {
 				</button>
 			</form>
 			<Link to="/">
-				<p>Já tem uma conta? Faça Login!</p>
+				<p data-identifier="back-to-login-action">Já tem uma conta? Faça Login!</p>
 			</Link>
 		</RegisterContainer>
 	);

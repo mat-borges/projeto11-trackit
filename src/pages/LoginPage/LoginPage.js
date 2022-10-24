@@ -25,7 +25,7 @@ export default function LoginPage() {
 			})
 			.catch((err) => {
 				console.log(err.response.data);
-				alert(`${err.response.data.details}`);
+				alert(`${err.response.data.message}`);
 				setLoggingIn(false);
 			});
 	}
@@ -52,6 +52,7 @@ export default function LoginPage() {
 					disabled={logginIn === true ? 'disabled' : ''}
 					value={user.email}
 					onChange={(e) => email(e.target.value)}
+					data-identifier="input-email"
 				/>
 				<input
 					type="password"
@@ -60,13 +61,17 @@ export default function LoginPage() {
 					disabled={logginIn === true ? 'disabled' : ''}
 					value={user.password}
 					onChange={(e) => password(e.target.value)}
+					data-identifier="input-password"
 				/>
-				<button type="submit" disabled={logginIn === true ? 'disabled' : ''}>
+				<button
+					type="submit"
+					disabled={logginIn === true ? 'disabled' : ''}
+					data-identifier="login-btn">
 					{logginIn === true ? <ThreeDots color="#ffffff" /> : 'Entrar'}
 				</button>
 			</form>
 			<Link to="/cadastro">
-				<p>Não tem uma conta? Cadastre-se!</p>
+				<p data-identifier="sign-up-action">Não tem uma conta? Cadastre-se!</p>
 			</Link>
 		</LoginContainer>
 	);

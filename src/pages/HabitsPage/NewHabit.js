@@ -8,7 +8,14 @@ import { accentColor } from '../../constants/colors';
 import axios from 'axios';
 import styled from 'styled-components';
 
-export default function NewHabit({ addingHabit, newHabit, setAddingHabit, setNewHabit }) {
+export default function NewHabit({
+	addingHabit,
+	newHabit,
+	setAddingHabit,
+	setNewHabit,
+	render,
+	setRender,
+}) {
 	const [sendingNewHabit, setSendingNewHabit] = useState(false);
 	const { userInfo } = useContext(UserContext);
 
@@ -20,6 +27,7 @@ export default function NewHabit({ addingHabit, newHabit, setAddingHabit, setNew
 		axios
 			.post(`${BASE_URL}/habits`, newHabit, config)
 			.then((res) => {
+				setRender(!render);
 				setSendingNewHabit(false);
 				setAddingHabit(false);
 			})
@@ -53,6 +61,7 @@ export default function NewHabit({ addingHabit, newHabit, setAddingHabit, setNew
 				placeholder="nome do hábito"
 				value={newHabit.name}
 				onChange={(e) => handleName(e.target.value)}
+				data-identifier="input-habit-name"
 			/>
 			<div>
 				{WEEKDAYS.map((day, i) => (
@@ -61,16 +70,17 @@ export default function NewHabit({ addingHabit, newHabit, setAddingHabit, setNew
 						type="button"
 						title={day.day}
 						selected={newHabit.days.includes(day.number)}
-						onClick={() => handleDays(day.number)}>
+						onClick={() => handleDays(day.number)}
+						data-identifier="week-day-btn">
 						{day.abbr}
 					</Weekdays>
 				))}
 			</div>
 			<Buttons>
-				<button type="button" onClick={cancelNewHabit}>
+				<button type="button" onClick={cancelNewHabit} data-identifier="cancel-habit-create-btn">
 					Cancelar
 				</button>
-				<button type="submit">
+				<button type="submit" data-identifier="save-habit-create-btn">
 					{sendingNewHabit === true ? <ThreeDots color="#ffffff" width="50" /> : 'Salvar'}
 				</button>
 			</Buttons>

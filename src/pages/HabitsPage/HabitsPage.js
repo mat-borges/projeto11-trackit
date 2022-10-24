@@ -14,6 +14,7 @@ export default function HabitsPage() {
 	const [habitsList, setHabitsList] = useState([]);
 	const [addingHabit, setAddingHabit] = useState(false);
 	const [newHabit, setNewHabit] = useState({ name: '', days: [] });
+	const [render, setRender] = useState(false);
 
 	useEffect(() => {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
@@ -24,7 +25,7 @@ export default function HabitsPage() {
 				setHabitsList(res.data);
 			})
 			.catch((err) => console.log(err.response.data));
-	}, [userInfo]);
+	}, [userInfo, render]);
 
 	if (habitsList.length === 0) {
 		return <Loading />;
@@ -36,7 +37,8 @@ export default function HabitsPage() {
 				<h1>Meus Hábitos</h1>
 				<button
 					disabled={addingHabit === true ? 'disabled' : ''}
-					onClick={() => setAddingHabit(true)}>
+					onClick={() => setAddingHabit(true)}
+					data-identifier="create-habit-btn">
 					<h2>+</h2>
 				</button>
 			</HabitsHeader>
@@ -45,12 +47,14 @@ export default function HabitsPage() {
 				newHabit={newHabit}
 				setAddingHabit={setAddingHabit}
 				setNewHabit={setNewHabit}
+				render={render}
+				setRender={setRender}
 			/>
 			{habitsList.map((habit, i) => (
-				<Habits key={i} habit={habit} />
+				<Habits key={i} habit={habit} render={render} setRender={setRender} />
 			))}
 
-			<span>
+			<span data-identifier="no-habit-message">
 				Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
 			</span>
 		</HabitsContainer>

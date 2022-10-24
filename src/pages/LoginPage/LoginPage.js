@@ -22,6 +22,8 @@ export default function LoginPage() {
 			.then((res) => {
 				setUserInfo(res.data);
 				navigate('/hoje');
+				localStorage.setItem('token', res.data.token);
+				localStorage.setItem('image', res.data.image);
 			})
 			.catch((err) => {
 				console.log(err.response.data);
@@ -41,40 +43,47 @@ export default function LoginPage() {
 		setUser(newUser);
 	}
 
-	return (
-		<LoginContainer color={logginIn === true ? '#f2f2f2' : '#ffffff'}>
-			<img src={logo} alt="logo" />
-			<form onSubmit={logIn}>
-				<input
-					type="email"
-					placeholder="email"
-					required
-					disabled={logginIn === true ? 'disabled' : ''}
-					value={user.email}
-					onChange={(e) => email(e.target.value)}
-					data-identifier="input-email"
-				/>
-				<input
-					type="password"
-					placeholder="senha"
-					required
-					disabled={logginIn === true ? 'disabled' : ''}
-					value={user.password}
-					onChange={(e) => password(e.target.value)}
-					data-identifier="input-password"
-				/>
-				<button
-					type="submit"
-					disabled={logginIn === true ? 'disabled' : ''}
-					data-identifier="login-btn">
-					{logginIn === true ? <ThreeDots color="#ffffff" /> : 'Entrar'}
-				</button>
-			</form>
-			<Link to="/cadastro">
-				<p data-identifier="sign-up-action">Não tem uma conta? Cadastre-se!</p>
-			</Link>
-		</LoginContainer>
-	);
+	if (localStorage.token !== undefined) {
+		const token = localStorage.token;
+		const image = localStorage.image;
+		setUserInfo({ token, image });
+		navigate('/hoje');
+	} else {
+		return (
+			<LoginContainer color={logginIn === true ? '#f2f2f2' : '#ffffff'}>
+				<img src={logo} alt="logo" />
+				<form onSubmit={logIn}>
+					<input
+						type="email"
+						placeholder="email"
+						required
+						disabled={logginIn === true ? 'disabled' : ''}
+						value={user.email}
+						onChange={(e) => email(e.target.value)}
+						data-identifier="input-email"
+					/>
+					<input
+						type="password"
+						placeholder="senha"
+						required
+						disabled={logginIn === true ? 'disabled' : ''}
+						value={user.password}
+						onChange={(e) => password(e.target.value)}
+						data-identifier="input-password"
+					/>
+					<button
+						type="submit"
+						disabled={logginIn === true ? 'disabled' : ''}
+						data-identifier="login-btn">
+						{logginIn === true ? <ThreeDots color="#ffffff" /> : 'Entrar'}
+					</button>
+				</form>
+				<Link to="/cadastro">
+					<p data-identifier="sign-up-action">Não tem uma conta? Cadastre-se!</p>
+				</Link>
+			</LoginContainer>
+		);
+	}
 }
 
 const LoginContainer = styled.div`

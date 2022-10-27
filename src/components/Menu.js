@@ -21,9 +21,9 @@ export default function Menu() {
 				<h1 data-identifier="habit-page-action">
 					<Link to="/habitos">Hábitos</Link>
 				</h1>
-				<div onClick={() => navigate('/hoje')}>
+				<div onClick={() => navigate('/hoje')} key={progress}>
 					<CircularProgressbarWithChildren
-						value={percentage === NaN ? 0 : percentage}
+						value={isNaN(percentage) ? 0 : percentage}
 						background="true"
 						backgroundPadding={5}
 						styles={{

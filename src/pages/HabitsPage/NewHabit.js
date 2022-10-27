@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 
 import { BASE_URL } from '../../constants/urls';
+import ProgressContext from '../../components/ProgressContext';
 import { ThreeDots } from 'react-loader-spinner';
 import UserContext from '../../components/UserContext';
 import { WEEKDAYS } from '../../constants/weekdays.js';
@@ -18,6 +19,7 @@ export default function NewHabit({
 }) {
 	const [sendingNewHabit, setSendingNewHabit] = useState(false);
 	const { userInfo } = useContext(UserContext);
+	const { progressBar, setProgressBar } = useContext(ProgressContext);
 
 	function addNewHabit(e) {
 		e.preventDefault();
@@ -30,6 +32,8 @@ export default function NewHabit({
 				setRender(!render);
 				setSendingNewHabit(false);
 				setAddingHabit(false);
+				setNewHabit({ name: '', days: [] });
+				setProgressBar(!progressBar);
 			})
 			.catch((err) => {
 				setSendingNewHabit(false);

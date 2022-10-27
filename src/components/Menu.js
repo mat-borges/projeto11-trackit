@@ -9,13 +9,11 @@ import styled from 'styled-components';
 export default function Menu() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { percentage, setPercentage, progress } = useContext(ProgressContext);
-
-	console.log('percentage', percentage);
+	const { percentage, setPercentage, progress, progressBar } = useContext(ProgressContext);
 
 	useEffect(() => {
 		setPercentage((progress.done / progress.total) * 100);
-	}, [progress]);
+	}, [progress, progressBar]);
 
 	if (location.pathname !== '/' && location.pathname !== '/cadastro') {
 		return (
@@ -25,7 +23,7 @@ export default function Menu() {
 				</h1>
 				<div onClick={() => navigate('/hoje')}>
 					<CircularProgressbarWithChildren
-						value={percentage}
+						value={percentage === NaN ? 0 : percentage}
 						background="true"
 						backgroundPadding={5}
 						styles={{

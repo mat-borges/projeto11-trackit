@@ -1,4 +1,5 @@
 import { BASE_URL } from '../../constants/urls.js';
+import ProgressContext from '../../components/ProgressContext.js';
 import UserContext from '../../components/UserContext.js';
 import { WEEKDAYS } from '../../constants/weekdays.js';
 import axios from 'axios';
@@ -9,6 +10,7 @@ import { useContext } from 'react';
 
 export default function Habits({ habit, render, setRender }) {
 	const { userInfo } = useContext(UserContext);
+	const { progressBar, setProgressBar } = useContext(ProgressContext);
 
 	function deleteHabit(id) {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
@@ -18,6 +20,7 @@ export default function Habits({ habit, render, setRender }) {
 				.then(() => {
 					alert('Hábito removido com sucesso!');
 					setRender(!render);
+					setProgressBar(!progressBar);
 				})
 				.catch((err) => console.log(err.response.data));
 		}

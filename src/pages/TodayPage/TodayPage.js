@@ -16,6 +16,7 @@ export default function TodayPage() {
 	const { setProgress, progress, percentage, setPercentage } = useContext(ProgressContext);
 	const [todayHabits, setTodayHabits] = useState([]);
 	const [render, setRender] = useState(false);
+	const [load, setLoad] = useState(true);
 
 	useEffect(() => {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
@@ -30,6 +31,7 @@ export default function TodayPage() {
 				const dones = res.filter((e) => e.done === true);
 				newProgress = { ...newProgress, done: dones.length };
 				setProgress(newProgress);
+				setLoad(false);
 			}
 
 			axios
@@ -37,7 +39,6 @@ export default function TodayPage() {
 				.then((res) => {
 					setTodayHabits(res.data);
 					progressUpdate(res.data);
-					console.log('progress.done---', progress.done, '---progress.total---', progress.total);
 					setPercentage((progress.done / progress.total) * 100);
 				})
 				.catch((err) => console.log(err.response.data));
@@ -46,7 +47,7 @@ export default function TodayPage() {
 		}
 	}, [render]);
 
-	if (todayHabits.length === 0) {
+	if (load === true) {
 		return <Loading />;
 	}
 
@@ -91,7 +92,7 @@ export default function TodayPage() {
 		if (!percentage) {
 			return <h2>Nenhum hábito concluído ainda</h2>;
 		} else {
-			return <h3>{percentage}% dos hábitos concluídos</h3>;
+			return <h3>{percentage.toFixed(1)}% dos hábitos concluídos</h3>;
 		}
 	}
 

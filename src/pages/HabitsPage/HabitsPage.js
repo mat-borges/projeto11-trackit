@@ -17,6 +17,7 @@ export default function HabitsPage() {
 	const [addingHabit, setAddingHabit] = useState(false);
 	const [newHabit, setNewHabit] = useState({ name: '', days: [] });
 	const [render, setRender] = useState(false);
+	const [load, setLoad] = useState(true);
 
 	useEffect(() => {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
@@ -28,8 +29,8 @@ export default function HabitsPage() {
 			axios
 				.get(`${BASE_URL}/habits`, config)
 				.then((res) => {
-					console.log(res.data);
 					setHabitsList(res.data);
+					setLoad(false);
 				})
 				.catch((err) => console.log(err.response.data));
 		} else {
@@ -37,7 +38,7 @@ export default function HabitsPage() {
 		}
 	}, [render]);
 
-	if (habitsList.length === 0) {
+	if (load === true) {
 		return <Loading />;
 	}
 

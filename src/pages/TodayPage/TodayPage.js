@@ -1,9 +1,9 @@
+import { Navigate, useNavigate } from 'react-router-dom';
 import { baseColor, textColor } from '../../constants/colors';
 import { useContext, useEffect, useState } from 'react';
 
 import { BASE_URL } from '../../constants/urls';
 import Loading from '../../components/Loading';
-import { Navigate } from 'react-router-dom';
 import ProgressContext from '../../components/ProgressContext';
 import UserContext from '../../components/UserContext';
 import axios from 'axios';
@@ -17,6 +17,7 @@ export default function TodayPage() {
 	const [todayHabits, setTodayHabits] = useState([]);
 	const [render, setRender] = useState(false);
 	const [load, setLoad] = useState(true);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
@@ -43,7 +44,7 @@ export default function TodayPage() {
 				})
 				.catch((err) => console.log(err.response.data));
 		} else {
-			Navigate('/');
+			navigate('/');
 		}
 	}, [render]);
 

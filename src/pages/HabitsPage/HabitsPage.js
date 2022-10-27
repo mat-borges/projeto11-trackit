@@ -20,19 +20,22 @@ export default function HabitsPage() {
 	const [load, setLoad] = useState(true);
 
 	useEffect(() => {
-		const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
 		if (localStorage.token !== undefined) {
 			userInfo.userName = localStorage.name;
 			userInfo.email = localStorage.email;
 			userInfo.token = localStorage.token;
 			userInfo.image = localStorage.image;
+			const config = { headers: { Authorization: `Bearer ${localStorage.token}` } };
 			axios
 				.get(`${BASE_URL}/habits`, config)
 				.then((res) => {
 					setHabitsList(res.data);
 					setLoad(false);
 				})
-				.catch((err) => console.log(err.response.data));
+				.catch((err) => {
+					navigate('/');
+					console.log(err.response.data);
+				});
 		} else {
 			navigate('/');
 		}

@@ -1,19 +1,42 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 
+import { BASE_URL } from '../constants/urls.js';
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import ProgressContext from './ProgressContext';
+import UserContext from './UserContext';
 import { accentColor } from '../constants/colors';
+import axios from 'axios';
 import styled from 'styled-components';
 
 export default function Menu() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { percentage, setPercentage, progress, progressBar } = useContext(ProgressContext);
+	const { percentage, setPercentage, progress, setProgress, progressBar } =
+		useContext(ProgressContext);
+	const { userInfo } = useContext(UserContext);
 
 	useEffect(() => {
-		setPercentage((progress.done / progress.total) * 100);
-	}, [progress, progressBar]);
+		const config = {
+			headers: { Authorization: `Bearer ${!userInfo.token ? localStorage.token : userInfo.token}` },
+		};
+
+		function progressUpdate(res) {
+			let newProgress = { total: res.length };
+			const dones = res.filter((e) => e.done === true);
+			newProgress = { ...newProgress, done: dones.length };
+			setProgress(newProgress);
+		}
+		console.log(percentage);
+
+		axios
+			.get(`${BASE_URL}/habits/today`, config)
+			.then((res) => {
+				progressUpdate(res.data);
+				setPercentage((progress.done / progress.total) * 100);
+			})
+			.catch((err) => console.log(err.name));
+	}, [progressBar]);
 
 	if (location.pathname !== '/' && location.pathname !== '/cadastro') {
 		return (
